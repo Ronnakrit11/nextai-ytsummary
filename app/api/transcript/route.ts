@@ -43,21 +43,28 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate YouTube URL format
-    const youtubeUrlPattern = /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})(\S*)?$/;
-    if (!youtubeUrlPattern.test(url)) {
+    // Extract video ID from URL
+    const videoIdMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+    if (!videoIdMatch) {
       return NextResponse.json(
-        { error: 'Invalid YouTube URL format' },
+        { error: 'Invalid YouTube URL. Please provide a valid video URL.' },
         { status: 400, headers }
       );
     }
 
+    const videoId = videoIdMatch[1];
+
     try {
-      const transcript = await YoutubeTranscript.fetchTranscript(url);
+      // First check if captions are available
+      const transcript = await YoutubeTranscript.fetchTranscript(url, {
+        lang: 'en'
+      }).catch((err) => {
+        throw new Error('TRANSCRIPT_UNAVAILABLE');
+      });
       
       if (!transcript || transcript.length === 0) {
         return NextResponse.json(
-          { error: 'No transcript content found' },
+          { error: 'This video does not have any captions available. Please try a different video.' },
           { status: 404, headers }
         );
       }
@@ -68,12 +75,26 @@ export async function POST(request: NextRequest) {
 
       // Handle specific transcript errors
       if (transcriptError instanceof Error) {
+        if (transcriptError.message === 'TRANSCRIPT_UNAVAILABLE') {
+          return NextResponse.json(
+            { 
+              error: 'This video does not have captions enabled. Please try a video that has closed captions or subtitles available.',
+              videoId 
+            },
+            { status: 400, headers }
+          );
+        }
+
         const errorMessage = transcriptError.message.toLowerCase();
         
         if (errorMessage.includes('could not find any transcripts') || 
-            errorMessage.includes('transcript is disabled')) {
+            errorMessage.includes('transcript is disabled') ||
+            errorMessage.includes('no transcript available')) {
           return NextResponse.json(
-            { error: 'This video does not have captions or transcripts enabled. Please try a different video.' },
+            { 
+              error: 'This video does not have captions or transcripts enabled. Please try a different video that has closed captions available.',
+              videoId
+            },
             { status: 400, headers }
           );
         }
@@ -88,7 +109,10 @@ export async function POST(request: NextRequest) {
 
       // Generic transcript error
       return NextResponse.json(
-        { error: 'Unable to fetch video transcript. Please try again or use a different video.' },
+        { 
+          error: 'Unable to fetch video transcript. Please ensure the video has captions enabled and try again, or use a different video.',
+          videoId
+        },
         { status: 500, headers }
       );
     }
