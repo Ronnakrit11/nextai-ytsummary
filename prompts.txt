@@ -1,0 +1,143 @@
+PROMPT 1:
+
+# Create a Next.js YouTube Video Analysis Application
+
+Create a modern web application using Next.js that:
+1. Takes a YouTube video URL as input
+2. Extracts the transcript using youtube-transcript API
+3. Presents a clean, user-friendly interface
+
+## Core Features
+
+1. Single page application with:
+   - YouTube URL input field with validation
+   - Loading state with progress indicator
+   - Analysis results display
+
+2. Error handling for:
+   - Invalid YouTube URLs
+   - Videos without transcripts
+   - API failures
+
+## UI Components
+
+1. Main form with:
+   - YouTube URL input with YouTube icon
+   - Submit button with loading state
+   - Progress indicator during processing
+
+2. Results display with:
+   - Video analysis section
+   - Reset button to analyze another video
+   - Clean, responsive layout
+
+## Styling
+
+1. Use Tailwind CSS for styling with:
+   - Responsive design (mobile-first)
+   - Modern, clean interface
+   - Loading animations
+   - Progress indicators
+
+
+- Use TypeScript for type safety
+- Implement proper error handling
+- Add loading states and user feedback
+- Keep the UI clean and minimal
+- Focus on user experience
+
+
+
+PROMPT 2:
+
+
+Please integrate AI analysis for the transcript extracted from a YouTube video link.
+
+I will be using the DeepSeek AI API for text analysis, so implement an API route that sends 
+the extracted transcription to DeepSeek AI for processing.
+Instead of displaying the full raw transcription, show only the AI-generated summary with 
+key highlights nd main takeaways from the video.
+The analysis should include:
+What the video is about (core topic/subject)
+Important points, insights, or key learnings
+Keep it concise, structured, and easy to read.
+Make sure the implementation is simple and efficient for real-time analysis.
+please, store env key in .env file for deepseek
+
+
+
+PROMPT 3:
+
+
+
+Please, implement this:
+- never display the transcribed text anywhere
+- create a loading/progress for the analysis until its ready
+- if there are errors, just display a window that it failed
+
+
+
+
+PROMPT 4
+
+Redesign this page with a clean and modern light theme. 
+The main focus should be a text field where the user pastes a YouTube link. 
+After the AI generates the video summary, show that text in a professional and easy-to-read way. 
+Make everything feel simple, bright, and friendly, with smooth fonts and good spacing. 
+The final look should feel modern and polished.
+
+
+
+
+
+
+
+
+PROMPT 5
+
+
+I want to extend my existing functionality where an AI analysis is performed on a video.
+Once the AI analysis is complete and the result is displayed in a component, 
+I want to add a "Save" button that will allow users to save this analysis to the database.
+
+
+Define a Prisma model for storing AI analysis results.
+The result should be stored in JSON format.
+Store the analysis in the database via Prisma.
+
+Frontend UI
+Add a "Save" button below the AI analysis result
+When clicked, it should trigger the API request to save the analysis
+Show loading and success states on the button
+
+
+
+
+
+
+
+
+
+PROMPT 6
+
+On the main page, below the video input box, create a visually appealing section to display all 
+previously saved analyses. Fetch these saved analyses from the database and present them in an elegant, 
+structured layout. Each analysis should be displayed as a clickable card or list item, ensuring clear readability.
+
+When a user clicks on an analysis, open a well-designed modal that dynamically loads and presents 
+the full analysis in a user-friendly format. The modal should have a smooth transition effect and an 
+option to close it easily. Ensure the UI is modern, responsive, and maintains a seamless user experience.
+
+
+
+
+PROMPT 7
+
+In the Saved Analyses section, when a user clicks on a saved analysis, display the full analysis 
+below in a well-structured and readable format. Ensure the text is easy to read, with proper 
+spacing and formatting.
+
+Additionally, include an "Edit" button next to the displayed analysis. 
+When the user clicks on "Edit", the text should become editable. After making changes, the user can 
+click a "Save" button to update and store the edited analysis. Ensure a smooth user experience with clear 
+visual cues, such as inline editing or a dedicated input field, and provide feedback upon saving.
