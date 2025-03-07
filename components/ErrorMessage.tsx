@@ -26,6 +26,9 @@ export default function ErrorMessage({ message, onDismiss }: ErrorMessageProps) 
           <h3 className="text-lg font-medium text-gray-900 font-sans">Unable to Process Video</h3>
           <div className="mt-2 text-md text-gray-700 font-sans">
             <p>{message}</p>
+            <p className="mt-2 text-sm text-gray-600">
+              Please ensure the video has captions enabled and try again, or try a different video.
+            </p>
           </div>
           <div className="mt-4">
             <button
@@ -62,4 +65,4 @@ export default function ErrorMessage({ message, onDismiss }: ErrorMessageProps) 
       </div>
     </div>
   );
-} 
+}

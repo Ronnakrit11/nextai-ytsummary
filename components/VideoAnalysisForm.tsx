@@ -36,6 +36,7 @@ export default function VideoAnalysisForm({
     setValidationError('');
     onSubmit(url);
   };
+
   return (
     <div className="card p-8 bg-white/80 backdrop-blur-sm w-full max-w-3xl rounded-xl shadow-lg border border-gray-100">
       <form onSubmit={handleSubmit} className="space-y-6">

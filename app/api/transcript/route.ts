@@ -12,24 +12,31 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const transcript = await YoutubeTranscript.fetchTranscript(url);
-    
-    return NextResponse.json({ transcript });
-  } catch (error) {
-    console.error('Error fetching transcript:', error);
-    
-    let errorMessage = 'Failed to fetch transcript';
-    if (error instanceof Error) {
-      if (error.message.includes('Could not find any transcripts')) {
-        errorMessage = 'This video does not have a transcript available.';
-      } else {
-        errorMessage = error.message;
+    try {
+      const transcript = await YoutubeTranscript.fetchTranscript(url);
+      return NextResponse.json({ transcript });
+    } catch (transcriptError) {
+      // Check for specific transcript-related errors
+      if (transcriptError instanceof Error) {
+        if (transcriptError.message.includes('Could not find any transcripts') || 
+            transcriptError.message.includes('Transcript is disabled')) {
+          return NextResponse.json(
+            { error: 'This video does not have captions or transcripts enabled. Please try a different video.' },
+            { status: 400 }
+          );
+        }
       }
+      // For other transcript errors
+      return NextResponse.json(
+        { error: 'Unable to fetch video transcript. Please try again or use a different video.' },
+        { status: 500 }
+      );
     }
-    
+  } catch (error) {
+    console.error('Error in transcript API:', error);
     return NextResponse.json(
-      { error: errorMessage },
+      { error: 'An unexpected error occurred. Please try again.' },
       { status: 500 }
     );
   }
-} 
+}
